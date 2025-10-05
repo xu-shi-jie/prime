@@ -1,0 +1,5 @@
+pretrained_rnn: checkpoints/seq_predictors/MN3.ckpt
+rnn_hidden_size: 256
+rnn_layers: 3
+rnn_type: gru
+plm: esm2_t33_650M_UR50D

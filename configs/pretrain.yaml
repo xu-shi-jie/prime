@@ -1,0 +1,16 @@
+seed: 0
+
+ckpt_dir: checkpoints/
+ckpt_path: checkpoints/pretrain_epoch=518_cnn_layers=200_val_acc=0.6950.ckpt
+amp: True
+epochs: 1000
+batch_size: 32
+num_workers: 8
+lr: 0.001
+wd: 0.01
+patience: 50
+rot_aug: False
+
+train_file: data/pretrain/train_ids.txt
+val_file: data/pretrain/val_ids.txt
+cnn_layers: 200 #10 # 18, 34, 50, 101, 152, 200

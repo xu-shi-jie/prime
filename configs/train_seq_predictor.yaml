@@ -1,0 +1,22 @@
+seed: 0
+
+metal: all
+amp: True
+epochs: 100
+batch_size: 32
+lr: 0.001
+wd: 0
+patience: 10
+
+train_file: data/biolip/seq/seq_train.fasta
+val_file: data/biolip/seq/seq_val.fasta
+test_file: data/biolip/seq/seq_test.fasta
+
+plm: esm2_t33_650M_UR50D # esm2_t30_150M_UR50D esm2_t36_3B_UR50D esm2_t48_15B_UR50D, esmc_600m, esm2_t33_650M_UR50D, esm2_t6_8M_UR50D, esmc-6b-2024-12, prot_t5_xl_half_uniref50-enc
+
+ckpt_dir: checkpoints/
+
+rnn_type: gru # lstm, gru
+hidden_size: 256
+num_layers: 3
+loss: ce # hard_mining, focal, bce, ce 

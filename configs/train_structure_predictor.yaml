@@ -1,0 +1,36 @@
+seed: 0
+
+metal: CA
+
+# training parameters
+batch_size: 32
+lr: 0.0001
+wd: 0
+patience: 5
+amp: True
+epochs: 100
+ckpt_dir: checkpoints/
+loss: fp_penalty # hard_mining, ce, fp_penalty
+
+# model parameters
+plm: prot_t5_xl_half_uniref50-enc #esm2_t48_15B_UR50D esm2_t33_650M_UR50D esm2_t36_3B_UR50D
+rnn_type: gru
+rnn_hidden_size: 128
+rnn_layers: 2
+pretrained_rnn: checkpoints/tune_biolip_seq_predictor/biolip_esm2_t33_650M_UR50D_128_2_epoch=3_val_auc=0.9833.ckpt
+detect_thresh: 0.05 # set a small threshold to improve recall: 0.05
+probe_size: 0.5
+probe_res_thresh: 0.001
+probe_score_thresh: 0.01
+max_offset: 5.0 # offset larger than this will be considered as a failed prediction and will not be refined
+cutoff: 10.0
+max_sites: 10000
+hard_mining_ratio: 0.2
+tuning: full
+neg_penalty: 5.0
+# pretraining
+use_pretrained: True
+cnn_layers: 152
+
+# rotation
+use_aug: True
