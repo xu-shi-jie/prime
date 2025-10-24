@@ -172,3 +172,5 @@ examples/
 data/
 tmp/
 notebooks/
+show_tree.py
+prune.py
