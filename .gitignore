@@ -169,8 +169,6 @@ _build
 benchmark/*
 trash/
 examples/
-weights/
-checkpoints/
 data/
 tmp/
 notebooks/
