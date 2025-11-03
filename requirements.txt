@@ -1,10 +1,12 @@
 fair-esm
 datasets
-evaluate 
+evaluate
 seqeval
 ipython
 ipywidgets
 loguru
+flask
+flask-cors
 pandas
 biopython
 biotite

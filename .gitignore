@@ -169,8 +169,12 @@ _build
 benchmark/*
 trash/
 examples/
-data/
 tmp/
 notebooks/
 show_tree.py
 prune.py
+
+*.pkl
+data/biolip/protein.fasta
+data/fasta
+data/pretrain/pdb_seqres.txt
