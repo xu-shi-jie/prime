@@ -10,7 +10,7 @@
 </div>
 
 ## 🛠️ Installation
-For installation, we recommend using [Docker](https://docs.docker.com/engine/install/).
+For installation, we recommend using [Docker](https://docs.docker.com/engine/install/). You also need to install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) to enable GPU support in Docker.
 ```bash
 git clone https://github.com/xu-shi-jie/prime.git
 cd prime
@@ -99,7 +99,13 @@ You may need to change the architecture of resnet in `models/resnet.py` to adapt
 ```
 
 ## 🌐 Freely available server
-Our PRIME server will be soon available at [PRIME Server](https://onodalab.ees.hokudai.ac.jp/prime/).
+Our PRIME server is now available at [PRIME Server](https://onodalab.ees.hokudai.ac.jp/prime/).
+
+## 🔍 FAQ
+<details>
+<summary>I cannot access your PRIME server.</summary>
+Unfortunately, our server is currently updating its certificate, which means you may encounter security warnings when trying to access it. Some browsers may block access to the site due to these warnings (e.g., Safari). We recommend using browsers like Chrome or Firefox -> Advanced -> Proceed to the site (unsafe). We apologize for any inconvenience this may cause and appreciate your understanding.
+</details>
 
 
 ## ✉️ Help
