@@ -396,7 +396,7 @@ def download_structure(protein_id: str, output_path: str) -> bool:
 
         # Try AlphaFold
         logger.info(f"Downloading AlphaFold structure: {protein_id}")
-        alphafold_url = f"https://alphafold.ebi.ac.uk/files/AF-{protein_id}-F1-model_v4.pdb"
+        alphafold_url = f"https://alphafold.ebi.ac.uk/files/AF-{protein_id}-2-F1-model_v6.cif"
         urllib.request.urlretrieve(alphafold_url, output_path)
         logger.success(f"Downloaded AlphaFold structure")
         return True
