@@ -34,7 +34,7 @@ RUN git clone https://github.com/ccsb-scripps/Illustrate \
 
 ADD requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install uv && python -m uv pip install -r requirements.txt
+    pip install uv && UV_HTTP_TIMEOUT=100000 python -m uv pip install -r requirements.txt
 ADD . .
 
 RUN git config --global --add safe.directory /workspace

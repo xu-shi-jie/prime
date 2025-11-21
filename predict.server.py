@@ -373,24 +373,28 @@ lock = threading.Lock()
 model_manager = None
 
 
-def download_structure(protein_id: str, output_path: str) -> bool:
-    """Download structure from PDB or Uniprot ID"""
+def download_structure(protein_id: str, output_path: str) -> tuple[bool, str]:
+    """Download structure from PDB or Uniprot ID
+
+    Returns:
+        (success, format): success is True if downloaded, format is 'cif' or 'pdb'
+    """
     try:
         protein_id = protein_id.strip().upper()
 
         if len(protein_id) == 4:
             logger.info(f"Downloading PDB: {protein_id}")
-            pdb_url = f"https://files.rcsb.org/download/{protein_id}.pdb"
+            cif_url = f"https://files.rcsb.org/download/{protein_id}.cif"
             try:
-                urllib.request.urlretrieve(pdb_url, output_path)
-                logger.success(f"Downloaded: {protein_id}.pdb")
-                return True
+                urllib.request.urlretrieve(cif_url, output_path)
+                logger.success(f"Downloaded: {protein_id}.cif")
+                return True, 'cif'
             except urllib.error.HTTPError:
-                cif_url = f"https://files.rcsb.org/download/{protein_id}.cif"
+                pdb_url = f"https://files.rcsb.org/download/{protein_id}.pdb"
                 try:
-                    urllib.request.urlretrieve(cif_url, output_path)
-                    logger.success(f"Downloaded: {protein_id}.cif")
-                    return True
+                    urllib.request.urlretrieve(pdb_url, output_path)
+                    logger.success(f"Downloaded: {protein_id}.pdb")
+                    return True, 'pdb'
                 except:
                     pass
 
@@ -399,11 +403,11 @@ def download_structure(protein_id: str, output_path: str) -> bool:
         alphafold_url = f"https://alphafold.ebi.ac.uk/files/AF-{protein_id}-2-F1-model_v6.cif"
         urllib.request.urlretrieve(alphafold_url, output_path)
         logger.success(f"Downloaded AlphaFold structure")
-        return True
+        return True, 'cif'
 
     except Exception as e:
         logger.error(f"Download failed: {e}")
-        return False
+        return False, ''
 
 
 @app.route('/predict/', methods=['POST'])
@@ -444,10 +448,18 @@ def predict():
             pdb_id = protein_id.upper()
             temp_input_file = tempfile.NamedTemporaryFile(mode='wb', suffix='.pdb', delete=False).name
 
-            if not download_structure(protein_id, temp_input_file):
+            success, file_format = download_structure(protein_id, temp_input_file)
+            if not success:
                 return jsonify({
                     "message": f"<span style='color: red'>Failed to download: {protein_id}</span>"
                 }), 400
+
+            # Rename file to match actual format
+            if file_format and not temp_input_file.endswith(f'.{file_format}'):
+                new_path = temp_input_file.rsplit('.', 1)[0] + f'.{file_format}'
+                shutil.move(temp_input_file, new_path)
+                temp_input_file = new_path
+                logger.info(f"Renamed temp file to: {temp_input_file}")
         else:
             return jsonify({
                 "message": "<span style='color: red'>Please upload a file or provide PDB/Uniprot ID.</span>"
