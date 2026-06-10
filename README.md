@@ -6,7 +6,7 @@
 
 [![BioRxiv](https://img.shields.io/badge/BioRxiv-2025.10.04.680417-red)](https://www.biorxiv.org/content/10.1101/2025.10.04.680417)
 [![GitHub](https://img.shields.io/github/stars/xu-shi-jie/prime?style=social)](https://github.com/xu-shi-jie/prime)
-[![License](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-blue)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 </div>
 
 ## 🛠️ Installation
@@ -104,7 +104,8 @@ Our PRIME server is now available at [PRIME Server](https://onodalab.ees.hokudai
 ## 🔍 FAQ
 <details>
 <summary>I cannot access your PRIME server.</summary>
-Unfortunately, our server is currently updating its certificate, which means you may encounter security warnings when trying to access it. Some browsers may block access to the site due to these warnings (e.g., Safari). We recommend using browsers like Chrome or Firefox -> Advanced -> Proceed to the site (unsafe). We apologize for any inconvenience this may cause and appreciate your understanding.
+Our server has been updated. If you continue to encounter this issue, please contact us.
+~~Unfortunately, our server is currently updating its certificate, which means you may encounter security warnings when trying to access it. Some browsers may block access to the site due to these warnings (e.g., Safari). We recommend using browsers like Chrome or Firefox -> Advanced -> Proceed to the site (unsafe). We apologize for any inconvenience this may cause and appreciate your understanding.~~
 </details>
 
 
