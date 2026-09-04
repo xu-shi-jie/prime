@@ -12,6 +12,7 @@ Lookup order for a checkpoint:
 4. the Hugging Face Hub        (downloaded once, then cached).
 """
 import os
+import sys
 from pathlib import Path
 
 # The Hugging Face repository holding the checkpoints. Override with
@@ -76,17 +77,41 @@ def _find_local(relpath: str):
     return None
 
 
+def _remote_size(relpath: str) -> str:
+    """Human readable size of `relpath` on the Hub, '?' if it cannot be queried"""
+    try:
+        from huggingface_hub import get_hf_file_metadata, hf_hub_url
+        size = get_hf_file_metadata(
+            hf_hub_url(HF_REPO, relpath, revision=HF_REVISION)).size
+        for unit in ("B", "KB", "MB"):
+            if size < 1024:
+                return f"{size:.0f} {unit}"
+            size /= 1024
+        return f"{size:.1f} GB"
+    except Exception:
+        return "?"
+
+
 def _download(relpath: str) -> str:
     try:
         from huggingface_hub import hf_hub_download
+        from huggingface_hub.constants import HF_HUB_CACHE
     except ImportError:  # pragma: no cover
         raise ImportError(
             "huggingface_hub is required to download PRIME checkpoints. "
             "Install it with `pip install huggingface_hub`, or download the "
             f"checkpoints manually and point PRIME_HOME at their parent directory."
         )
-    from loguru import logger
-    logger.info(f"Downloading {relpath} from {HF_REPO} (this happens once) ......")
+    # Announced on stderr rather than through loguru, which the prediction
+    # program silences unless --verbose: downloading hundreds of megabytes
+    # should never be a surprise.
+    print(f"\n🌳 PRIME: {relpath} is not available locally.\n"
+          f"  source     https://huggingface.co/{HF_REPO}\n"
+          f"  size       {_remote_size(relpath)} (downloaded once, then cached)\n"
+          f"  cache      {HF_HUB_CACHE}\n"
+          f"  skip this  `prime download <METAL>` beforehand, or point PRIME_HOME\n"
+          f"             at a directory that already holds weights/ and checkpoints/\n",
+          file=sys.stderr, flush=True)
     return hf_hub_download(HF_REPO, relpath, revision=HF_REVISION)
 
 
