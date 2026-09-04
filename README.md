@@ -7,6 +7,11 @@
 [![BioRxiv](https://img.shields.io/badge/BioRxiv-2025.10.04.680417-red)](https://www.biorxiv.org/content/10.1101/2025.10.04.680417)
 [![GitHub](https://img.shields.io/github/stars/xu-shi-jie/prime?style=social)](https://github.com/xu-shi-jie/prime)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
+
+[![PyPI](https://img.shields.io/pypi/v/prime-metal?logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/prime-metal/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/prime-metal?logo=pypi&logoColor=white&label=PyPI%20downloads)](https://pypistats.org/packages/prime-metal)
+[![Bioconda](https://img.shields.io/conda/vn/bioconda/prime-metal?logo=anaconda&logoColor=white&label=Bioconda)](https://bioconda.github.io/recipes/prime-metal/README.html)
+[![Bioconda downloads](https://img.shields.io/conda/dn/bioconda/prime-metal?logo=anaconda&logoColor=white&label=Bioconda%20downloads)](https://anaconda.org/bioconda/prime-metal)
 </div>
 
 ## 🛠️ Installation
