@@ -11,18 +11,19 @@ from torch.utils.data import DataLoader
 import torch.utils.data
 from tqdm import tqdm
 from biotite.structure.io.pdbx import CIFFile, get_structure
-from models.plm import get_model
+from .plm import get_model
 import lightning as L
 from argparse import Namespace as Args
 import numpy as np
 import pandas as pd
 from Bio.Align import PairwiseAligner
 
-from models.utils import shorten_path
+from .utils import shorten_path
 from typing import List
 from torch.utils.data import Sampler
 
-metals = open("data/biolip/ions.txt").read().splitlines()
+from prime.paths import asset
+metals = open(asset("data", "ions.txt")).read().splitlines()
 metal2token = {m: i for i, m in enumerate(metals)}
 metal2token.update({"UNK": len(metals)})
 token2metal = {i: m for m, i in metal2token.items()}

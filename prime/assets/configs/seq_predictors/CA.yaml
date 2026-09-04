@@ -1,0 +1,10 @@
+cnn_layers: 152
+detect_thresh: 6.269896e-05
+loss: fp_penalty
+max_offset: 5.0
+metal: CA
+plm: esm2_t33_650M_UR50D
+pretrained_rnn: checkpoints/seq_predictors/CA.ckpt
+rnn_hidden_size: 256
+rnn_layers: 3
+rnn_type: gru

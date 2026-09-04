@@ -1,0 +1,9 @@
+include LICENSE README.md
+recursive-include prime/assets *.yaml *.csv *.txt
+prune benchmark
+prune checkpoints
+prune data
+prune examples
+prune notebooks
+prune scripts
+prune weights

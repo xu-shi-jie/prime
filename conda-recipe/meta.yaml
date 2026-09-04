@@ -1,0 +1,74 @@
+{% set name = "prime-metal" %}
+{% set pypi_name = "prime_metal" %}
+{% set version = "1.0.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ pypi_name }}-{{ version }}.tar.gz
+  # Recompute after every release: sha256sum dist/prime_metal-<version>.tar.gz
+  sha256: 9a5f0f5743eb166b6ba72b4147bd3b69c274b3afcaeabc4abef034689dfd3b59
+
+build:
+  noarch: python
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  entry_points:
+    - prime = prime.cli:main
+    - prime-predict = prime.predict:main
+
+requirements:
+  host:
+    - python >=3.10
+    - pip
+    - setuptools >=77
+  run:
+    - python >=3.10
+    - pytorch >=2.0
+    - transformers
+    - huggingface_hub
+    - lightning
+    - biotite
+    - biopython
+    - numpy
+    - pandas
+    - scipy
+    - einops
+    - loguru
+    - tqdm
+    - requests
+    - rich
+    - psutil
+    - pyyaml
+
+test:
+  imports:
+    - prime
+    - prime.paths
+  commands:
+    - prime --help
+    - prime info
+
+about:
+  home: https://github.com/xu-shi-jie/prime
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: Probe-based identification of metal-binding sites in proteins using deep learning representations
+  description: |
+    PRIME predicts the positions of bound metal ions in a protein structure. A
+    sequence model (ESM-2 embeddings + GRU) proposes candidate binding
+    residues, probes are placed around their N/O/S atoms, and a 3D ResNet
+    scores and refines each probe into a predicted ion position. Models are
+    available for 14 metal types (ZN, CA, MG, MN, FE, FE2, CU, CU1, CO, NI,
+    CD, HG, K, NA). Model checkpoints are downloaded on first use from the
+    Hugging Face Hub. A CUDA GPU is required for prediction.
+  doc_url: https://github.com/xu-shi-jie/prime#readme
+
+extra:
+  recipe-maintainers:
+    - xu-shi-jie
+  identifiers:
+    - doi:10.1101/2025.10.04.680417

@@ -7,7 +7,6 @@ import time
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_scatter import segment_sum_coo, segment_coo
 
 
 def get_inplanes():

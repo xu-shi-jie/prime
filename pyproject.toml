@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prime-metal"
+dynamic = ["version"]          # single source of truth: prime/__init__.py
+description = "Probe-based identification of metal-binding sites in proteins using deep learning representations"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Shijie Xu", email = "shijie.xu@ees.hokudai.ac.jp" },
+    { name = "Akira Onoda", email = "akira.onoda@ees.hokudai.ac.jp" },
+]
+keywords = [
+    "bioinformatics", "protein", "metal-binding site", "deep learning",
+    "structural biology", "metalloprotein",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "torch",
+    "transformers",
+    "huggingface_hub",
+    "lightning",
+    "biotite",
+    "biopython",
+    "numpy",
+    "pandas",
+    "scipy",
+    "einops",
+    "loguru",
+    "tqdm",
+    "requests",
+    "rich",
+    "psutil",
+    "pyyaml",
+]
+
+[project.optional-dependencies]
+server = ["flask", "flask-cors"]
+profile = ["line_profiler"]
+
+[project.urls]
+Homepage = "https://github.com/xu-shi-jie/prime"
+Paper = "https://www.biorxiv.org/content/10.1101/2025.10.04.680417"
+Server = "https://onodalab.ees.hokudai.ac.jp/prime/"
+
+[project.scripts]
+prime = "prime.cli:main"
+prime-predict = "prime.predict:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "prime.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["prime*"]
+
+# The repository root also holds training scripts (train.py, predict.py, ...);
+# they are not part of the distribution.
+[tool.setuptools]
+py-modules = []
+
+[tool.setuptools.package-data]
+prime = ["assets/**/*.yaml", "assets/**/*.csv", "assets/**/*.txt"]

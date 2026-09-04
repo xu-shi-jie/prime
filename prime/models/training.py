@@ -6,7 +6,10 @@ import shutil
 import subprocess
 import time
 import os
-import line_profiler
+try:  # profiling is optional at runtime
+    from line_profiler import profile
+except ImportError:
+    def profile(f): return f
 import rich
 import torch
 import e3nn
@@ -22,20 +25,20 @@ from sklearn.metrics import (
     roc_curve,
     precision_recall_curve,
 )
-from models.module import MLP, ConvFCLayers
+from .module import MLP, ConvFCLayers
 import numpy as np
 from math import ceil
-from models.pdb import rand_rot
+from .pdb import rand_rot
 from timm.scheduler.cosine_lr import CosineLRScheduler
 import lightning as L
 from lightning.pytorch.strategies import DDPStrategy
 import wandb
-from models.dataset import SeqDataModule, ProbeDataModule, SeqDataset, label2bin, read_biolip, wwPDB, considered_metals,  abundants
-from models.module import Header
-from models.plm import EsmModelInfo
-from models.resnet import generate_model, FocalLoss, batch_data
-from models.utils import Config, is_wandb_running, kde_pytorch, log_kde, memory_usage_psutil, generate_id
-from models.dataset import elem2token, res2token, _3to1, _1to3, metal2token, metals, token2metal, transition_metals, all_elem2token, all_token2elem, metal2elem, token2elem
+from .dataset import SeqDataModule, ProbeDataModule, SeqDataset, label2bin, read_biolip, wwPDB, considered_metals,  abundants
+from .module import Header
+from .plm import EsmModelInfo
+from .resnet import generate_model, FocalLoss, batch_data
+from .utils import Config, is_wandb_running, kde_pytorch, log_kde, memory_usage_psutil, generate_id
+from .dataset import elem2token, res2token, _3to1, _1to3, metal2token, metals, token2metal, transition_metals, all_elem2token, all_token2elem, metal2elem, token2elem
 from loguru import logger
 from einops import rearrange
 from biotite.structure.io.pdbx import CIFFile, get_structure

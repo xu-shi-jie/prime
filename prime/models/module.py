@@ -2,7 +2,6 @@ import torch.nn as nn
 from typing import List
 import torch
 from einops import rearrange
-import e3nn
 
 
 class MLP(nn.Module):

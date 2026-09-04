@@ -12,9 +12,11 @@ import numpy as np
 from scipy.spatial import KDTree
 from math import ceil
 from tqdm import tqdm
-import line_profiler
+try:  # profiling is optional at runtime
+    from line_profiler import profile
+except ImportError:
+    def profile(f): return f
 import math
-import cupy as cp
 import string
 
 
@@ -171,7 +173,7 @@ def remove_close_points_kdtree(points, min_distance):
     return points[keep]
 
 
-@line_profiler.profile
+@profile
 def pack_bit(x: torch.Tensor):
     """ Pack the bit tensor to a sequence of bytes.
     Args:
@@ -190,7 +192,7 @@ def pack_bit(x: torch.Tensor):
     return output
 
 
-@line_profiler.profile
+@profile
 def unpack_bit(x: torch.Tensor, num_bits: int):
     """ Unpack the bit tensor from a sequence of bytes.
     Args:
@@ -232,7 +234,7 @@ def safe_dist(vec1: torch.Tensor, vec2: torch.Tensor, max_size: int = 100_000_00
     return torch.cat(dists)
 
 
-@line_profiler.profile
+@profile
 def safe_filter(nos: torch.Tensor, pos: torch.Tensor, thr: torch.Tensor, all: torch.Tensor, lb: float, max_size: int = 100_000_000):
     """ filter the binding sites based on the distance matrix 
     nos: (N, 3), N are the coordinates of the binding sites
@@ -278,7 +280,7 @@ def get_color(v):
     return f'[{v[0]:.2f},{v[1]:.2f},{v[2]:.2f}]'
 
 
-@line_profiler.profile
+@profile
 @torch.compile()
 def kde_pytorch(x, x_samples, bandwidth=0.1, k=None, kernel='gaussian'):
     """
@@ -358,6 +360,7 @@ def safe_cdist_thr(x: torch.Tensor, threshold: float, batch_size: int = 1000, ):
 
 
 def scatter_medoid(positions: torch.Tensor, indices: torch.Tensor, dim_size: int):
+    import cupy as cp  # optional, only needed here
     kernel_code = r'''
     extern "C" {
 

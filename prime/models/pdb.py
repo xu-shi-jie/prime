@@ -1,10 +1,12 @@
 from einops import repeat
-from torch_scatter import scatter_max, scatter_mean
 from scipy.spatial import KDTree
 import re
 import pandas as pd
 from tqdm import tqdm
-import line_profiler
+try:  # profiling is optional at runtime
+    from line_profiler import profile
+except ImportError:
+    def profile(f): return f
 from typing import List, Tuple, Dict, Any
 import numpy as np
 from biotite.structure import AtomArray, AtomArrayStack
@@ -14,10 +16,8 @@ from Bio.PDB.MMCIF2Dict import MMCIF2Dict
 import gzip
 from typing import List
 # fmt: off
-import sys
-sys.path.append('.')
-from models.utils import remove_close_points_kdtree, pack_bit, safe_cdist_thr, scatter_medoid, unpack_bit, safe_filter, safe_dist
-from models.dataset import _1to3
+from .utils import remove_close_points_kdtree, pack_bit, safe_cdist_thr, scatter_medoid, unpack_bit, safe_filter, safe_dist
+from .dataset import _1to3
 # fmt: on
 # https://chem.libretexts.org/Courses/Mount_Royal_University/Chem_1201/Unit_2._Periodic_Properties_of_the_Elements/2.08%3A_Sizes_of_Atoms_and_Ions
 # Ionic radius data from R. D. Shannon, “Revised effective ionic radii and systematic studies of interatomic distances in halides and chalcogenides,” Acta Crystallographica 32, no. 5 (1976): 751–767.
@@ -130,6 +130,18 @@ def generate_pymol_script(possible_sites, prefix='pr', c: str = 'blue'):
     return cmd
 
 
+def scatter_mean(src: torch.Tensor, index: torch.Tensor, dim: int = 0, dim_size: int = None):
+    """Average `src` over the groups given by `index` (torch_scatter.scatter_mean)"""
+    assert dim == 0, "only dim=0 is used here"
+    dim_size = index.max().item() + 1 if dim_size is None else dim_size
+    out = torch.zeros((dim_size, *src.shape[1:]),
+                      dtype=src.dtype, device=src.device)
+    out.index_add_(0, index, src)
+    count = torch.zeros(dim_size, dtype=src.dtype, device=src.device)
+    count.index_add_(0, index, torch.ones_like(index, dtype=src.dtype))
+    return out / count.clamp(min=1).reshape(-1, *([1] * (src.dim() - 1)))
+
+
 def resnia2res(resnia):
     res, at = [], []
     for x in resnia:
@@ -139,7 +151,7 @@ def resnia2res(resnia):
     return res, at
 
 
-# @line_profiler.profile
+# @profile
 def collect_interests(interests, dist_nos, positions, nos_probs, nos_resnia, samples, ks_thresh, kp_thresh):
     """ Collect the binding sites based on the distance matrix """
     keys, indices = torch.unique(
@@ -163,7 +175,7 @@ def collect_interests(interests, dist_nos, positions, nos_probs, nos_resnia, sam
     return torch.cat([clustered_positions, max_scores.T.contiguous()], dim=-1)
 
 
-@line_profiler.profile
+@profile
 def get_probe(metal, statistics, nos_coords, nos_probs, nos_resnia, nos_elem, all_coords, probe_size, dev, lb, ub, ks_thresh, kp_thresh, min_dist):
     """ Get the probe positions for the binding sites
     Args:
@@ -257,7 +269,7 @@ def get_probe(metal, statistics, nos_coords, nos_probs, nos_resnia, nos_elem, al
     return binding_sites[indices[:num_probes]]
 
 
-# @line_profiler.profile
+# @profile
 def get_nos_atoms(params):
     seq_pos, prob, seq2res, \
         atoms, chain_id, metal, processed_stats, \
