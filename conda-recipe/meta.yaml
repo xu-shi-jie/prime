@@ -1,6 +1,6 @@
 {% set name = "prime-metal" %}
 {% set pypi_name = "prime_metal" %}
-{% set version = "1.0.0" %}
+{% set version = "1.0.1" %}
 
 package:
   name: {{ name }}
