@@ -3,18 +3,20 @@
 {% set version = "1.0.1" %}
 
 package:
-  name: {{ name }}
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ pypi_name }}-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ pypi_name[0] }}/{{ pypi_name }}/{{ pypi_name }}-{{ version }}.tar.gz
   # Recompute after every release: sha256sum dist/prime_metal-<version>.tar.gz
-  sha256: 9a5f0f5743eb166b6ba72b4147bd3b69c274b3afcaeabc4abef034689dfd3b59
+  sha256: d3e2c855e60882187a21ad393e6b2e2eddfbac90351804ec897299c5da61c7e6
 
 build:
   noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vvv
+  run_exports:
+    - {{ pin_subpackage(name|lower, max_pin="x") }}
   entry_points:
     - prime = prime.cli:main
     - prime-predict = prime.predict:main
